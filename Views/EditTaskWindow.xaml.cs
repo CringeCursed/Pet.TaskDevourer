@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace Pet.TaskDevourer.Views
 {
@@ -28,7 +29,7 @@ namespace Pet.TaskDevourer.Views
         {
             if (string.IsNullOrWhiteSpace(TitleTextBox.Text))
             {
-                MessageBox.Show("Название задачи не может быть пустым!", "Ошибка",
+                MessageBox.Show("Task name cannot be empty", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -37,7 +38,7 @@ namespace Pet.TaskDevourer.Views
             TaskItem.Description = DescriptionTextBox.Text.Trim();
             TaskItem.DueDate = DueDatePicker.SelectedDate ?? DateTime.Now;
 
-            DialogResult = true; // ✅ обязательно!
+            DialogResult = true;
             Close();
         }
 
@@ -45,6 +46,11 @@ namespace Pet.TaskDevourer.Views
         {
             DialogResult = false;
             Close();
+        }
+        private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+                this.DragMove();
         }
     }
 }

@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterScreen">
 
 
-    <Grid Margin="20">
+    <Grid Margin="20"  MouseLeftButtonDown="Grid_MouseLeftButtonDown">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
