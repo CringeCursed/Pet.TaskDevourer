@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Pet.TaskDevourer.Helpers;
+using Pet.TaskDevourer.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using Pet.TaskDevourer.Models;
-using Pet.TaskDevourer.Helpers;
-using Pet.TaskDevourer.Views;
 
 namespace Pet.TaskDevourer.ViewModels
 {
@@ -53,7 +53,7 @@ namespace Pet.TaskDevourer.ViewModels
             Active,
             Completed
         }
-        private TaskFilter _selectedFilter = TaskFilter.All;
+        private TaskFilter _selectedFilter = TaskFilter.All; // default value
         public TaskFilter SelectedFilter
         {
             get => _selectedFilter;
@@ -68,14 +68,20 @@ namespace Pet.TaskDevourer.ViewModels
         public ICommand AddTaskCommand { get; }
         public ICommand DeleteTaskCommand { get; }
         public ICommand EditTaskCommand { get; }
-        public ICommand DeleteCompletedTasksCommand { get; }
+        public ICommand DeleteCompletedCommand { get; }
 
         public MainWindowViewModel()
         {
+            var loadedTasks = JsonStorage.Load();
+            foreach(var task in loadedTasks)
+            {
+                Tasks.Add(task);
+            }
+
             AddTaskCommand = new RelayCommand(_ => AddTask(), _ => !string.IsNullOrWhiteSpace(NewTitle));
             DeleteTaskCommand = new RelayCommand(task => Tasks.Remove((TaskItem)task));
             EditTaskCommand = new RelayCommand(task => EditTask((TaskItem)task));
-            DeleteCompletedTasksCommand = new RelayCommand(_ => DeleteCompletedTasks(), _ => Tasks.Any(t => t.IsCompleted));
+            DeleteCompletedCommand = new RelayCommand(_ => DeleteCompletedTasks(), _ => Tasks.Any(t => t.IsCompleted));
 
             FilteredTasks = CollectionViewSource.GetDefaultView(Tasks);
             FilteredTasks.Filter = taskObj =>
@@ -103,32 +109,74 @@ namespace Pet.TaskDevourer.ViewModels
         private void AddTask()
         {
             Tasks.Add(new TaskItem(NewTitle, NewDescription, NewDueDate ?? DateTime.Today));
+            SaveTasks();
+
             NewTitle = "";
             NewDescription = "";
             NewDueDate = DateTime.Today;
         }
-
         private void EditTask(TaskItem task)
         {
+            // Создаем копию для редактирования (чтобы можно было отменить изменения)
             var editableTask = new TaskItem(task.Title, task.Description, task.DueDate);
-            var window = new EditTaskWindow(editableTask);
-            if (window.ShowDialog() == true)
-            {
 
+            // Создаем ViewModel
+            var viewModel = new TaskEditViewModel(editableTask);
+
+            // Создаем окно и устанавливаем DataContext
+            var window = new TaskEditWindow
+            {
+                DataContext = viewModel,
+                Owner = Application.Current.MainWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+
+            // Настраиваем действие закрытия
+            viewModel.CloseAction = () => window.Close();
+
+            // Открываем окно модально
+            window.ShowDialog();
+
+            // Проверяем, было ли сохранение
+            if (viewModel.IsConfirmed)
+            {
+                // Копируем измененные данные обратно в оригинальный объект
                 task.Title = editableTask.Title;
                 task.Description = editableTask.Description;
                 task.DueDate = editableTask.DueDate;
 
+                // Сохраняем изменения
+                SaveTasks();
+
+                // Обновляем отображение 
+                FilteredTasks.Refresh();
             }
         }
 
-        private void DeleteCompletedTasks()
+        public void DeleteCompletedTasks()
         {
             var completedTasks = Tasks.Where(t => t.IsCompleted).ToList();
-            foreach (var task in completedTasks)
+
+            var result = MessageBox.Show("Are you sure, you want to delete all completed tasks?",
+                    "Delete confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if(result == MessageBoxResult.Yes)
             {
-                Tasks.Remove(task);
+                foreach (var task in completedTasks)
+                {
+                    Tasks.Remove(task);
+                    DeleteTask(task);
+                }
             }
+        }
+        private void DeleteTask(TaskItem task)
+        {
+            Tasks.Remove(task);
+            SaveTasks();
+        }
+
+        private void SaveTasks()
+        {
+            JsonStorage.Save(Tasks.ToList());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

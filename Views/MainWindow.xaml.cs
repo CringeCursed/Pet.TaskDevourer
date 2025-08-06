@@ -1,4 +1,6 @@
 ﻿using Pet.TaskDevourer.ViewModels;
+using Pet.TaskDevourer;
+using System.ComponentModel;
 using System.Windows;
 namespace Pet.TaskDevourer
 {

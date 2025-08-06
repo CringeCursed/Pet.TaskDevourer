@@ -9,8 +9,8 @@
         Style="{StaticResource MaterialDesignWindow}"
         Title="MainWindow" Height="450" Width="800">
 
-
-    <Grid Background="#F5F5F5">
+<materialDesign:DialogHost x:Name="MainDialogHost">
+        <Grid Background="#F5F5F5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -66,7 +66,7 @@
 
                                         <StackPanel Grid.Column="2" Orientation="Horizontal">
                                             <Button Content="✏️" ToolTip="Edit Task" Command="{Binding DataContext.EditTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"  CommandParameter="{Binding}"/>
-                                            <Button Content="🗑️" Margin="10,0,0,0" ToolTip="Delete Task" Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
+                                            <Button Content="🗑️" Margin="10,0,0,0" ToolTip="Delete Task" Command="{Binding DataContext.DeleteCompletedCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
@@ -88,9 +88,10 @@
 
                     <Button Content="ADD TASK" HorizontalAlignment="Stretch" Padding="15,8" Command="{Binding AddTaskCommand}"/>
 
-                    <Button Content="DELETE COMPLETED" Command="{Binding DeleteCompletedTasksCommand}"  Margin="0,20,0,0" HorizontalAlignment="Stretch" Padding="15,8"/>
+                        <Button Content="DELETE COMPLETED" Command="{Binding DeleteCompletedCommand}"  Margin="0,20,0,0" HorizontalAlignment="Stretch" Padding="15,8"/>
                 </StackPanel>
             </Border>
         </Grid>
     </Grid>
+    </materialDesign:DialogHost>
 </Window>

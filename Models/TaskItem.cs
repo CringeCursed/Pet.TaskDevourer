@@ -3,6 +3,7 @@ using System;
 
 namespace Pet.TaskDevourer.Models
 {
+    [Serializable]
     public class TaskItem : INotifyPropertyChanged
     {
         private string _title = default!;
