@@ -117,13 +117,10 @@ namespace Pet.TaskDevourer.ViewModels
         }
         private void EditTask(TaskItem task)
         {
-            // Создаем копию для редактирования (чтобы можно было отменить изменения)
             var editableTask = new TaskItem(task.Title, task.Description, task.DueDate);
 
-            // Создаем ViewModel
             var viewModel = new TaskEditViewModel(editableTask);
 
-            // Создаем окно и устанавливаем DataContext
             var window = new TaskEditWindow
             {
                 DataContext = viewModel,
@@ -131,24 +128,18 @@ namespace Pet.TaskDevourer.ViewModels
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            // Настраиваем действие закрытия
             viewModel.CloseAction = () => window.Close();
 
-            // Открываем окно модально
             window.ShowDialog();
 
-            // Проверяем, было ли сохранение
             if (viewModel.IsConfirmed)
             {
-                // Копируем измененные данные обратно в оригинальный объект
                 task.Title = editableTask.Title;
                 task.Description = editableTask.Description;
                 task.DueDate = editableTask.DueDate;
 
-                // Сохраняем изменения
                 SaveTasks();
 
-                // Обновляем отображение 
                 FilteredTasks.Refresh();
             }
         }
