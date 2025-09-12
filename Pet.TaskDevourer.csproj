@@ -14,4 +14,11 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Server\**\*.cs" />
+    <None Remove="Server\**\*" />
+    <Content Remove="Server\**\*" />
+    <EmbeddedResource Remove="Server\**\*" />
+  </ItemGroup>
+
 </Project>

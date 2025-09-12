@@ -1,18 +1,25 @@
-﻿using Pet.TaskDevourer.ViewModels;
-using Pet.TaskDevourer;
-using System.ComponentModel;
+﻿using System.Threading.Tasks;
 using System.Windows;
+using Pet.TaskDevourer.ViewModels;
+
 namespace Pet.TaskDevourer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel();
+            if (DataContext is null)
+            {
+                DataContext = new MainWindowViewModel();
+            }
+            this.Loaded += async (_, __) =>
+            {
+                if (DataContext is MainWindowViewModel vm)
+                {
+                    await vm.InitializeAsync();
+                }
+            };
         }
     }
 }

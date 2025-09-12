@@ -7,91 +7,281 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Style="{StaticResource MaterialDesignWindow}"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="450"
+        Width="800">
 
-<materialDesign:DialogHost x:Name="MainDialogHost">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+
+    <materialDesign:DialogHost x:Name="MainDialogHost">
         <Grid Background="#F5F5F5">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#673ab7" Padding="12">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="TaskDevourer" FontSize="22" FontWeight="Bold" Foreground="White"/>
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200" Margin="20 0 0 0" Padding="10,5" VerticalAlignment="Center" Background="White" materialDesign:HintAssist.Hint="Search..."/>
-            </StackPanel>
-        </Border>
-
-        <Grid Grid.Row="1" Margin="15">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <Border Grid.Column="0" Background="White" CornerRadius="4" Padding="10" Margin="0,0,10,0" BorderThickness="1" BorderBrush="#E0E0E0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                        <RadioButton Content="All Tasks" IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=All}" GroupName="Filter" Margin="0,0,10,0"/>
-                        <RadioButton Content="Active" IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Active}" GroupName="Filter" Margin="0,0,10,0" />
-                        <RadioButton Content="Done" IsChecked="{Binding SelectedFilter, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Completed}" GroupName="Filter"/>
-                    </StackPanel>
-
-                    <ListView ItemsSource="{Binding FilteredTasks}" Grid.Row="1" BorderThickness="0">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="10" Margin="0,5" Background="#FAFAFA" CornerRadius="4">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <CheckBox Grid.Column="0" FontSize="22" IsChecked="{Binding IsCompleted, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,15,0"/>
-
-                                        <StackPanel Grid.Column="1">
-                                            <TextBlock Text="{Binding Title}" FontSize="16" FontWeight="DemiBold"/>
-                                            <TextBlock Text="{Binding Description}" Margin="0,5,0,0" Foreground="#757575" TextWrapping="Wrap"/>
-                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
-                                                <Image Source="/Resources/icon-calendar.png" Width="16" Margin="0,0,5,0"/>
-                                                <TextBlock Text="{Binding DueDate, StringFormat='Date: {0:dd MMM yyyy}'}"/>
-                                            </StackPanel>
-                                        </StackPanel>
-
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal">
-                                            <Button Content="✏️" ToolTip="Edit Task" Command="{Binding DataContext.EditTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"  CommandParameter="{Binding}"/>
-                                            <Button Content="🗑️" Margin="10,0,0,0" ToolTip="Delete Task" Command="{Binding DataContext.DeleteCompletedCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </Grid>
-            </Border>
-
-            <Border Grid.Column="1" Background="White" CornerRadius="4" Padding="15" Width="300" BorderThickness="1" BorderBrush="#E0E0E0">
-                <StackPanel>
-                    <TextBlock Text="New Task" FontSize="18" FontWeight="Bold" Margin="0,0,0,15"/>
-
-                    <TextBox Text="{Binding NewTitle, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,10" materialDesign:HintAssist.Hint="Name*"/>
-
-                    <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinHeight="80" Margin="0,0,0,10" materialDesign:HintAssist.Hint="Description"/>
-
-                    <DatePicker SelectedDate="{Binding NewDueDate}" Margin="0,0,0,15" SelectedDateFormat="Short"/>
-
-                    <Button Content="ADD TASK" HorizontalAlignment="Stretch" Padding="15,8" Command="{Binding AddTaskCommand}"/>
-
-                        <Button Content="DELETE COMPLETED" Command="{Binding DeleteCompletedCommand}"  Margin="0,20,0,0" HorizontalAlignment="Stretch" Padding="15,8"/>
+            <Border Grid.Row="0"
+                    Background="#673ab7"
+                    Padding="12">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="TaskDevourer"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                    <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                             Width="200"
+                             Margin="20 0 0 0"
+                             Padding="10,5"
+                             VerticalAlignment="Center"
+                             Background="White"
+                             materialDesign:HintAssist.Hint="Search..."/>
                 </StackPanel>
             </Border>
+
+            <Grid Grid.Row="1"
+                  Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        Background="White"
+                        CornerRadius="4"
+                        Padding="10"
+                        Margin="0,0,10,0"
+                        BorderThickness="1"
+                        BorderBrush="#E0E0E0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,0,0,10">
+                            <TextBlock Text="Filter by tag:"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,10,0"/>
+                            <ComboBox Width="160"
+                                      ItemsSource="{Binding AllTags}"
+                                      SelectedItem="{Binding SelectedTag}"/>
+                        </StackPanel>
+
+                        <ListView ItemsSource="{Binding FilteredTasks}"
+                                  Grid.Row="1"
+                                  BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="10"
+                                            Margin="0,6"
+                                            Background="#FAFAFA"
+                                            CornerRadius="6">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#55000000"
+                                                              BlurRadius="10"
+                                                              ShadowDepth="2"
+                                                              Opacity="0.4"/>
+                                        </Border.Effect>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="16"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <CheckBox Grid.Column="0"
+                                                      FontSize="22"
+                                                      IsChecked="{Binding IsCompleted, Mode=TwoWay}"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,15,0"/>
+
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontSize="16"
+                                                           FontWeight="DemiBold"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Text="{Binding Description}"
+                                                           Margin="0,5,0,0"
+                                                           Foreground="#757575"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="WordEllipsis"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            Margin="0,8,0,0">
+                                                    <Image Source="/Resources/icon-calendar.png"
+                                                           Width="16"
+                                                           Margin="0,0,5,0"/>
+                                                    <TextBlock Text="{Binding DueDate, StringFormat='Date: {0:dd MMM yyyy}'}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal"
+                                                            Margin="0,6,0,0">
+                                                    <Border Background="#E8F5E9"
+                                                            CornerRadius="10"
+                                                            Padding="6,2"
+                                                            Margin="0,0,6,6">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding SubTasksTotalCount}"
+                                                                                 Value="0">
+                                                                        <Setter Property="Visibility"
+                                                                                Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="✓"
+                                                                       Foreground="#2E7D32"
+                                                                       Margin="0,0,4,0"/>
+                                                            <TextBlock Text="{Binding SubTasksProgress}"
+                                                                       Foreground="#2E7D32"/>
+                                                        </StackPanel>
+                                                    </Border>
+
+                                                    <!-- Attachments chip (visible only if there are any) -->
+                                                    <Border Background="#E3F2FD"
+                                                            CornerRadius="10"
+                                                            Padding="6,2"
+                                                            Margin="0,0,6,6">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Attachments.Count}"
+                                                                                 Value="0">
+                                                                        <Setter Property="Visibility"
+                                                                                Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="📎"
+                                                                       Foreground="#1565C0"
+                                                                       Margin="0,0,4,0"/>
+                                                            <TextBlock Text="{Binding Attachments.Count}"
+                                                                       Foreground="#1565C0"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </StackPanel>
+                                                <ItemsControl ItemsSource="{Binding Tags}"
+                                                              Margin="0,6,0,0">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Background="#EEEEEE"
+                                                                    CornerRadius="10"
+                                                                    Padding="6,2"
+                                                                    Margin="0,0,6,6">
+                                                                <TextBlock Text="{Binding}"
+                                                                           FontSize="12"/>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                </ItemsControl>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="3"
+                                                        Orientation="Horizontal"
+                                                        VerticalAlignment="Center">
+                                                <Button Content="✏️"
+                                                        ToolTip="Edit Task"
+                                                        Background="#673ab7"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        Padding="10,6"
+                                                        Command="{Binding DataContext.EditTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"/>
+                                                <Button Content="🗑️"
+                                                        Margin="8,0,0,0"
+                                                        ToolTip="Delete Task"
+                                                        Background="#E53935"
+                                                        Foreground="White"
+                                                        BorderThickness="0"
+                                                        Padding="10,6"
+                                                        Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="1"
+                        Background="White"
+                        CornerRadius="4"
+                        Padding="15"
+                        Width="300"
+                        BorderThickness="1"
+                        BorderBrush="#E0E0E0">
+                    <StackPanel>
+                        <TextBlock Text="New Task"
+                                   FontSize="18"
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,15"/>
+
+                        <TextBox Text="{Binding NewTitle, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,10"
+                                 materialDesign:HintAssist.Hint="Name*"/>
+
+                        <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}"
+                                 AcceptsReturn="True"
+                                 MinHeight="80"
+                                 Margin="0,0,0,10"
+                                 materialDesign:HintAssist.Hint="Description"/>
+
+                        <DatePicker SelectedDate="{Binding NewDueDate}"
+                                    Margin="0,0,0,15"
+                                    SelectedDateFormat="Short"/>
+
+                        <Button Content="ADD TASK"
+                                HorizontalAlignment="Stretch"
+                                Padding="15,8"
+                                Command="{Binding AddTaskCommand}"/>
+
+                        <Button Content="DELETE COMPLETED"
+                                Command="{Binding DeleteCompletedCommand}"
+                                Margin="0,20,0,0"
+                                HorizontalAlignment="Stretch"
+                                Padding="15,8"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+            <Grid Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  Background="#80000000"
+                  Panel.ZIndex="999">
+                <Border Background="#FFFFFF"
+                        Margin="30"
+                        Opacity="0.95"
+                        CornerRadius="8"
+                        Padding="20">
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <TextBlock Text="{Binding BusyMessage}"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Margin="0 0 0 12"
+                                   HorizontalAlignment="Center"/>
+                        <ProgressBar IsIndeterminate="True"
+                                     Width="220"
+                                     Height="6"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Grid>
-    </Grid>
     </materialDesign:DialogHost>
 </Window>

@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "API: Pet.TaskDevourer.Api",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-api",
+      "program": "${workspaceFolder}/Server/Pet.TaskDevourer.Api/bin/Debug/net8.0/Pet.TaskDevourer.Api.dll",
+      "cwd": "${workspaceFolder}/Server/Pet.TaskDevourer.Api",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5005"
+      },
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "App: Pet.TaskDevourer (WPF)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-wpf",
+      "program": "${workspaceFolder}/bin/Debug/net8.0-windows/Pet.TaskDevourer.exe",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    }
+    ,
+    {
+      "name": "App: Pet.TaskDevourer (WPF via dll)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build-wpf",
+      "program": "${workspaceFolder}/bin/Debug/net8.0-windows/Pet.TaskDevourer.dll",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Run App + API",
+      "configurations": [
+        "API: Pet.TaskDevourer.Api",
+        "App: Pet.TaskDevourer (WPF)"
+      ]
+    }
+  ]
+}
