@@ -26,6 +26,3 @@ publish/app/Pet.TaskDevourer.exe
 ## 🛠 Diagnostics
 * `startup.log` appended with initialization + CRUD events
 * If both API + local load fail → error MessageBox
-
-## 📄 License
-See `LICENSE.txt`.
