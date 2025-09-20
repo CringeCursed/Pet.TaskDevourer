@@ -35,7 +35,7 @@ if not exist "%APP_EXE%" (
   echo App executable still not found: %APP_EXE%
   exit /b 1
 )
-
+  
 powershell -NoLogo -NoProfile -Command "try { (New-Object Net.Sockets.TcpClient).Connect('localhost',5005); 'API UP' } catch { 'API DOWN' }" | find "API UP" >nul
 if %errorlevel%==0 (
   echo API already running on port 5005.
